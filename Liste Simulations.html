@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche d'objets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin: 20px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        @media (max-width: 768px) {
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Recherche d'objets</h1>
+
+    <div class="buttons-container">
+        <button data-secteur="4N">4N</button>
+        <button data-secteur="5R">5R</button>
+        <button data-secteur="KD">KD</button>
+        <button data-secteur="2F">2F</button>
+        <button data-secteur="4E">4E</button>
+        <button data-secteur="4H">4H</button>
+        <button data-secteur="9.1">9.1</button>
+        <button data-secteur="9.2">9.2</button>
+        <button data-secteur="9.3">9.3</button>
+        <button data-secteur="FP1">FP1</button>
+        <button data-secteur="FP2">FP2</button>
+        <button data-secteur="FP3">FP3</button>
+    </div>
+
+    <div class="results" id="results">
+        Cliquez sur un bouton pour afficher les objets correspondants.
+    </div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+        let data = [];
+
+        // Charger les données depuis un fichier JSON externe
+        fetch('Liste Simulations.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                data = jsonData;
+            })
+            .catch(error => {
+                resultsDiv.innerHTML = `Erreur lors du chargement des données : ${error.message}`;
+            });
+
+        document.querySelectorAll('.buttons-container button').forEach(button => {
+            button.addEventListener('click', () => {
+                const secteur = button.getAttribute('data-secteur');
+                const filteredData = data.filter(item => item.secteur.includes(secteur));
+                
+                if (filteredData.length > 0) {
+                    resultsDiv.innerHTML = '<ul>' + 
+                        filteredData.map(item => `<li>${item.nom}</li>`).join('') + 
+                        '</ul>';
+                } else {
+                    resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
