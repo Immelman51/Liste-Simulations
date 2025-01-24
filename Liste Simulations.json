@@ -3092,7 +3092,7 @@
         {
             "nom": "4H 201A",
             "id": 309,
-            "numero": [5,1],
+            "numero": 0,
             "secteur": [
                 "4H"
             ],
@@ -3102,7 +3102,7 @@
         {
             "nom": "4H_201A_H",
             "id": 310,
-            "numero": 0,
+            "numero": [5,1],
             "secteur": [
                 "4H"
             ],
@@ -3112,7 +3112,7 @@
         {
             "nom": "4H 201B",
             "id": 311,
-            "numero": [5,1],
+            "numero": 0,
             "secteur": [
                 "4H"
             ],
@@ -3122,7 +3122,7 @@
         {
             "nom": "4H_201B_H",
             "id": 312,
-            "numero": 0,
+            "numero": [5,1],
             "secteur": [
                 "4H"
             ],
