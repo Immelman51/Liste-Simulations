@@ -130,18 +130,18 @@
                         return (numero[0] === 1 || numero[0] === 2 || numero[0] === 3 ||
                                 numero[2] === 1 || numero[2] === 2 || numero[2] === 3);
                     }).sort((a, b) => {
-                        const aPrimary = a.numero[0] ?? Infinity;
-                        const bPrimary = b.numero[0] ?? Infinity;
-                        const aSecondary = a.numero[2] ?? Infinity;
-                        const bSecondary = b.numero[2] ?? Infinity;
+                        const aPrimary = Number(a.numero[0] ?? Infinity);
+                        const bPrimary = Number(b.numero[0] ?? Infinity);
+                        const aSecondary = Number(a.numero[2] ?? Infinity);
+                        const bSecondary = Number(b.numero[2] ?? Infinity);
 
                         if (aPrimary !== bPrimary) return aPrimary - bPrimary;
                         if (aSecondary !== bSecondary) return aSecondary - bSecondary;
 
-                        const aTertiary = a.numero[1] ?? Infinity;
-                        const bTertiary = b.numero[1] ?? Infinity;
-                        const aQuaternary = a.numero[3] ?? Infinity;
-                        const bQuaternary = b.numero[3] ?? Infinity;
+                        const aTertiary = Number(a.numero[1] ?? Infinity);
+                        const bTertiary = Number(b.numero[1] ?? Infinity);
+                        const aQuaternary = Number(a.numero[3] ?? Infinity);
+                        const bQuaternary = Number(b.numero[3] ?? Infinity);
 
                         if (aTertiary !== bTertiary) return aTertiary - bTertiary;
                         return aQuaternary - bQuaternary;
