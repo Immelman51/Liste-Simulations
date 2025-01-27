@@ -53,6 +53,23 @@
             max-width: 600px;
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
         @media (max-width: 768px) {
             button {
                 font-size: 14px;
@@ -108,9 +125,29 @@
                 const filteredData = data.filter(item => item.secteur.includes(secteur));
                 
                 if (filteredData.length > 0) {
-                    resultsDiv.innerHTML = '<ul>' + 
-                        filteredData.map(item => `<li>${item.nom}</li>`).join('') + 
-                        '</ul>';
+                    resultsDiv.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Numero 1</th>
+                                    <th>Numero 2</th>
+                                    <th>Numero 3</th>
+                                    <th>Numero 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${filteredData.map(item => `
+                                    <tr>
+                                        <td>${item.nom}</td>
+                                        <td>${item.numero[0] ?? ''}</td>
+                                        <td>${item.numero[1] ?? ''}</td>
+                                        <td>${item.numero[2] ?? ''}</td>
+                                        <td>${item.numero[3] ?? ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>`;
                 } else {
                     resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
                 }
