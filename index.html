@@ -122,34 +122,90 @@
         document.querySelectorAll('.buttons-container button').forEach(button => {
             button.addEventListener('click', () => {
                 const secteur = button.getAttribute('data-secteur');
-                const filteredData = data.filter(item => item.secteur.includes(secteur));
-                
-                if (filteredData.length > 0) {
-                    resultsDiv.innerHTML = `
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Numero 1</th>
-                                    <th>Numero 2</th>
-                                    <th>Numero 3</th>
-                                    <th>Numero 4</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${filteredData.map(item => `
+
+                if (secteur === "9.1") {
+                    // Filtrer et trier pour le secteur 9.1
+                    const filteredData = data.filter(item => {
+                        const numero = item.numero;
+                        return (numero[0] === 1 || numero[0] === 2 || numero[0] === 3 ||
+                                numero[2] === 1 || numero[2] === 2 || numero[2] === 3);
+                    }).sort((a, b) => {
+                        const aPrimary = a.numero[0] ?? Infinity;
+                        const bPrimary = b.numero[0] ?? Infinity;
+                        const aSecondary = a.numero[2] ?? Infinity;
+                        const bSecondary = b.numero[2] ?? Infinity;
+
+                        if (aPrimary !== bPrimary) return aPrimary - bPrimary;
+                        if (aSecondary !== bSecondary) return aSecondary - bSecondary;
+
+                        const aTertiary = a.numero[1] ?? Infinity;
+                        const bTertiary = b.numero[1] ?? Infinity;
+                        const aQuaternary = a.numero[3] ?? Infinity;
+                        const bQuaternary = b.numero[3] ?? Infinity;
+
+                        if (aTertiary !== bTertiary) return aTertiary - bTertiary;
+                        return aQuaternary - bQuaternary;
+                    });
+
+                    // Affichage des résultats
+                    if (filteredData.length > 0) {
+                        resultsDiv.innerHTML = `
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td>${item.nom}</td>
-                                        <td>${item.numero[0] ?? ''}</td>
-                                        <td>${item.numero[1] ?? ''}</td>
-                                        <td>${item.numero[2] ?? ''}</td>
-                                        <td>${item.numero[3] ?? ''}</td>
+                                        <th>Nom</th>
+                                        <th>Numero 1</th>
+                                        <th>Numero 2</th>
+                                        <th>Numero 3</th>
+                                        <th>Numero 4</th>
                                     </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>`;
+                                </thead>
+                                <tbody>
+                                    ${filteredData.map(item => `
+                                        <tr>
+                                            <td>${item.nom}</td>
+                                            <td>${item.numero[0] ?? ''}</td>
+                                            <td>${item.numero[1] ?? ''}</td>
+                                            <td>${item.numero[2] ?? ''}</td>
+                                            <td>${item.numero[3] ?? ''}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>`;
+                    } else {
+                        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+                    }
                 } else {
-                    resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+                    // Filtrer par secteur pour les autres boutons
+                    const filteredData = data.filter(item => item.secteur.includes(secteur));
+                    
+                    if (filteredData.length > 0) {
+                        resultsDiv.innerHTML = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Numero 1</th>
+                                        <th>Numero 2</th>
+                                        <th>Numero 3</th>
+                                        <th>Numero 4</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${filteredData.map(item => `
+                                        <tr>
+                                            <td>${item.nom}</td>
+                                            <td>${item.numero[0] ?? ''}</td>
+                                            <td>${item.numero[1] ?? ''}</td>
+                                            <td>${item.numero[2] ?? ''}</td>
+                                            <td>${item.numero[3] ?? ''}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>`;
+                    } else {
+                        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+                    }
                 }
             });
         });
