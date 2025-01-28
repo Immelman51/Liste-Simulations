@@ -166,6 +166,143 @@
                         resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
                     }
                 } else {
+                    if (secteur === "9.1") {
+    // Filtrer et trier pour le secteur 9.1
+    const filteredData = data.filter(item => {
+        const numero = item.numero;
+        return Number(numero[0]) === 1 || Number(numero[0]) === 2 || Number(numero[0]) === 3;
+    }).sort((a, b) => {
+        const aPrimary = Number(a.numero[0] ?? Infinity);
+        const bPrimary = Number(b.numero[0] ?? Infinity);
+
+        if (aPrimary !== bPrimary) return aPrimary - bPrimary;
+
+        const aSecondary = Number(a.numero[1] ?? Infinity);
+        const bSecondary = Number(b.numero[1] ?? Infinity);
+
+        return aSecondary - bSecondary;
+    });
+
+    // Affichage des résultats
+    if (filteredData.length > 0) {
+        resultsDiv.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Numero 1</th>
+                        <th>Numero 2</th>
+                        <th>Numero 3</th>
+                        <th>Numero 4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filteredData.map(item => `
+                        <tr>
+                            <td>${item.nom}</td>
+                            <td>${item.numero[0] ?? ''}</td>
+                            <td>${item.numero[1] ?? ''}</td>
+                            <td>${item.numero[2] ?? ''}</td>
+                            <td>${item.numero[3] ?? ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+    } else {
+        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+    }
+} else if (secteur === "9.2") {
+    // Code similaire à 9.1, pour les valeurs 4 et 5
+    const filteredData = data.filter(item => {
+        const numero = item.numero;
+        return Number(numero[0]) === 4 || Number(numero[0]) === 5;
+    }).sort((a, b) => {
+        const aPrimary = Number(a.numero[0] ?? Infinity);
+        const bPrimary = Number(b.numero[0] ?? Infinity);
+
+        if (aPrimary !== bPrimary) return aPrimary - bPrimary;
+
+        const aSecondary = Number(a.numero[1] ?? Infinity);
+        const bSecondary = Number(b.numero[1] ?? Infinity);
+
+        return aSecondary - bSecondary;
+    });
+
+    // Affichage des résultats
+    if (filteredData.length > 0) {
+        resultsDiv.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Numero 1</th>
+                        <th>Numero 2</th>
+                        <th>Numero 3</th>
+                        <th>Numero 4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filteredData.map(item => `
+                        <tr>
+                            <td>${item.nom}</td>
+                            <td>${item.numero[0] ?? ''}</td>
+                            <td>${item.numero[1] ?? ''}</td>
+                            <td>${item.numero[2] ?? ''}</td>
+                            <td>${item.numero[3] ?? ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+    } else {
+        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+    }
+} else if (secteur === "9.3") {
+    // Code similaire à 9.1, pour les valeurs 6 et 7
+    const filteredData = data.filter(item => {
+        const numero = item.numero;
+        return Number(numero[0]) === 6 || Number(numero[0]) === 7;
+    }).sort((a, b) => {
+        const aPrimary = Number(a.numero[0] ?? Infinity);
+        const bPrimary = Number(b.numero[0] ?? Infinity);
+
+        if (aPrimary !== bPrimary) return aPrimary - bPrimary;
+
+        const aSecondary = Number(a.numero[1] ?? Infinity);
+        const bSecondary = Number(b.numero[1] ?? Infinity);
+
+        return aSecondary - bSecondary;
+    });
+
+    // Affichage des résultats
+    if (filteredData.length > 0) {
+        resultsDiv.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Numero 1</th>
+                        <th>Numero 2</th>
+                        <th>Numero 3</th>
+                        <th>Numero 4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filteredData.map(item => `
+                        <tr>
+                            <td>${item.nom}</td>
+                            <td>${item.numero[0] ?? ''}</td>
+                            <td>${item.numero[1] ?? ''}</td>
+                            <td>${item.numero[2] ?? ''}</td>
+                            <td>${item.numero[3] ?? ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+    } else {
+        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
+    }
+}
+
                     // Filtrer par secteur pour les autres boutons
                     const filteredData = data.filter(item => item.secteur.includes(secteur));
                     
