@@ -125,15 +125,17 @@
 
                 if (secteur === "FP1" || secteur === "FP2" || secteur === "FP3") {
                     // Filtrer et trier pour FP1, FP2, FP3
-                    const filteredData = data.filter(item => {
-                        const numero = item.numero;
-                        return numero[0] === secteur || numero[2] === secteur;
-                    }).sort((a, b) => {
-                        const aValue = a.numero[0] === secteur ? Number(a.numero[1] ?? Infinity) : Number(a.numero[3] ?? Infinity);
-                        const bValue = b.numero[0] === secteur ? Number(b.numero[1] ?? Infinity) : Number(b.numero[3] ?? Infinity);
+                    
+                   const filteredData = data.filter(item => {
+    const numero = item.numero;
+    return String(numero[0]) === secteur || String(numero[2]) === secteur;
+}).sort((a, b) => {
+    const aValue = String(a.numero[0]) === secteur ? Number(a.numero[1] ?? Infinity) : Number(a.numero[3] ?? Infinity);
+    const bValue = String(b.numero[0]) === secteur ? Number(b.numero[1] ?? Infinity) : Number(b.numero[3] ?? Infinity);
 
-                        return aValue - bValue;
-                    });
+    return aValue - bValue;
+});
+
 
                     // Affichage des résultats
                     if (filteredData.length > 0) {
