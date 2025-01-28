@@ -79,7 +79,11 @@
     </style>
 </head>
 <body>
-    <h1>Recherche d'objets</h1>
+    <h1>Liste Simulations</h1>
+    <div>9.1 = Bloc 1(4N), 2(4E) et 3(KD2F)<br>
+    9.2 = Bloc 4(5R) et 5(4H)<br>
+    9.3 = Bloc 5(renforcement) et 6(mode dégradé)
+    </div>
 
     <div class="buttons-container">
         <button data-secteur="4N">4N</button>
@@ -100,10 +104,7 @@
         Cliquez sur un bouton pour afficher les objets correspondants.
     </div>
 
-    <div>9.1 = Bloc 1(4N), 2(4E) et 3(KD2F)<br>
-    9.2 = Bloc 4(5R) et 5(4H)<br>
-    9.3 = Bloc 5(renforcement) et 6(mode dégradé)
-    </div>
+    
     
     <script>
         const resultsDiv = document.getElementById('results');
@@ -172,119 +173,61 @@
                     }
                 } else {
                     
-                    if (secteur === "9.1") {
-    // Filtrer et trier pour le secteur 9.1
+                   if (secteur === "9.1") {
     const filteredData = data.filter(item => {
         const numero = item.numero;
-        return Number(numero[0]) === 1 || Number(numero[0]) === 2 || Number(numero[0]) === 3;
+        // Vérifier si numero[0] est 1, 2 ou 3
+        return numero && [1, 2, 3].includes(Number(numero[0]));
     }).sort((a, b) => {
         const aPrimary = Number(a.numero[0] ?? Infinity);
         const bPrimary = Number(b.numero[0] ?? Infinity);
-
         if (aPrimary !== bPrimary) return aPrimary - bPrimary;
 
         const aSecondary = Number(a.numero[1] ?? Infinity);
         const bSecondary = Number(b.numero[1] ?? Infinity);
-
         return aSecondary - bSecondary;
     });
 
     // Affichage des résultats
-    if (filteredData.length > 0) {
-        resultsDiv.innerHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Bloc</th>
-                        <th>Numero</th>
-                        <th>Bloc</th>
-                        <th>Numero</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${filteredData.map(item => `
-                        <tr>
-                            <td>${item.nom}</td>
-                            <td>${item.numero[0] ?? ''}</td>
-                            <td>${item.numero[1] ?? ''}</td>
-                            <td>${item.numero[2] ?? ''}</td>
-                            <td>${item.numero[3] ?? ''}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>`;
-    } else {
-        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
-    }
-
-                        
+    renderResults(filteredData, secteur);
 } else if (secteur === "9.2") {
-    // Code similaire à 9.1, pour les valeurs 4 et 5
     const filteredData = data.filter(item => {
         const numero = item.numero;
-        return Number(numero[0]) === 4 || Number(numero[0]) === 5;
+        // Vérifier si numero[0] est 4 ou 5
+        return numero && [4, 5].includes(Number(numero[0]));
     }).sort((a, b) => {
         const aPrimary = Number(a.numero[0] ?? Infinity);
         const bPrimary = Number(b.numero[0] ?? Infinity);
-
         if (aPrimary !== bPrimary) return aPrimary - bPrimary;
 
         const aSecondary = Number(a.numero[1] ?? Infinity);
         const bSecondary = Number(b.numero[1] ?? Infinity);
-
         return aSecondary - bSecondary;
     });
 
     // Affichage des résultats
-    if (filteredData.length > 0) {
-        resultsDiv.innerHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Bloc</th>
-                        <th>Numero</th>
-                        <th>Bloc</th>
-                        <th>Numero</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${filteredData.map(item => `
-                        <tr>
-                            <td>${item.nom}</td>
-                            <td>${item.numero[0] ?? ''}</td>
-                            <td>${item.numero[1] ?? ''}</td>
-                            <td>${item.numero[2] ?? ''}</td>
-                            <td>${item.numero[3] ?? ''}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>`;
-    } else {
-        resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
-    }
-
-
-                        
+    renderResults(filteredData, secteur);
 } else if (secteur === "9.3") {
-    // Code similaire à 9.1, pour les valeurs 6 et 7
     const filteredData = data.filter(item => {
         const numero = item.numero;
-        return Number(numero[0]) === 6 || Number(numero[0]) === 7;
+        // Vérifier si numero[0] est 6 ou 7
+        return numero && [6, 7].includes(Number(numero[0]));
     }).sort((a, b) => {
         const aPrimary = Number(a.numero[0] ?? Infinity);
         const bPrimary = Number(b.numero[0] ?? Infinity);
-
         if (aPrimary !== bPrimary) return aPrimary - bPrimary;
 
         const aSecondary = Number(a.numero[1] ?? Infinity);
         const bSecondary = Number(b.numero[1] ?? Infinity);
-
         return aSecondary - bSecondary;
     });
 
     // Affichage des résultats
+    renderResults(filteredData, secteur);
+}
+
+// Fonction pour afficher les résultats
+function renderResults(filteredData, secteur) {
     if (filteredData.length > 0) {
         resultsDiv.innerHTML = `
             <table>
@@ -313,6 +256,7 @@
         resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
     }
 }
+
 
                     // Filtrer par secteur pour les autres boutons
                     const filteredData = data.filter(item => item.secteur.includes(secteur));
