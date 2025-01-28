@@ -177,70 +177,121 @@
         const closeModal = document.getElementById('close-modal');
         let data = [];
 
-        // Charger les données depuis un fichier JSON externe
-        fetch('simulations.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(jsonData => {
-                data = jsonData;
-            })
-            .catch(error => {
-                resultsDiv.innerHTML = `Erreur lors du chargement des données : ${error.message}`;
-            });
-
-        // Gérer les clics sur les boutons
-        document.querySelectorAll('.buttons-container button').forEach(button => {
-            button.addEventListener('click', () => {
-                const secteur = button.getAttribute('data-secteur');
-                const filteredData = data.filter(item => item.secteur.includes(secteur));
-                renderResults(filteredData, secteur);
-            });
+    // Charger les données depuis un fichier JSON externe
+    fetch('simulations.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(jsonData => {
+            data = jsonData;
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = `Erreur lors du chargement des données : ${error.message}`;
         });
 
-        // Fonction pour afficher les résultats
-        function renderResults(filteredData, secteur) {
-            if (filteredData.length > 0) {
-                resultsDiv.innerHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Bloc</th>
-                                <th>Num</th>
-                                <th>Bloc</th>
-                                <th>Num</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${filteredData.map(item => `
-                                <tr>
-                                    <td><a href="#" class="simulation-name" data-id="${item.id}">${item.nom}</a></td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[0] ?? '' : item.numero}</td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[1] ?? '' : ''}</td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[2] ?? '' : ''}</td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[3] ?? '' : ''}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>`;
+    // Gérer les clics sur les boutons
+    document.querySelectorAll('.buttons-container button').forEach(button => {
+        button.addEventListener('click', () => {
+            const secteur = button.getAttribute('data-secteur');
+            let filteredData = [];
 
-                // Ajouter des gestionnaires d'événements pour les noms cliquables
-                document.querySelectorAll('.simulation-name').forEach(link => {
-                    link.addEventListener('click', event => {
-                        event.preventDefault();
-                        const id = event.target.getAttribute('data-id');
-                        const simulation = data.find(item => item.id == id);
-                        openModal(simulation);
-                    });
+            // Logique pour les boutons "9.1", "9.2", "9.3"
+            if (secteur === "9.1") {
+                filteredData = data.filter(item => {
+                    const numero = item.numero;
+                    if (Array.isArray(numero)) {
+                        return numero.some(n => [1, 2, 3].includes(Number(n)));
+                    } else {
+                        return [1, 2, 3].includes(Number(numero));
+                    }
+                }).sort((a, b) => sortNumeros(a, b));
+            } else if (secteur === "9.2") {
+                filteredData = data.filter(item => {
+                    const numero = item.numero;
+                    if (Array.isArray(numero)) {
+                        return numero.some(n => [4, 5].includes(Number(n)));
+                    } else {
+                        return [4, 5].includes(Number(numero));
+                    }
+                }).sort((a, b) => sortNumeros(a, b));
+            } else if (secteur === "9.3") {
+                filteredData = data.filter(item => {
+                    const numero = item.numero;
+                    if (Array.isArray(numero)) {
+                        return numero.some(n => [6, 7].includes(Number(n)));
+                    } else {
+                        return [6, 7].includes(Number(numero));
+                    }
+                }).sort((a, b) => sortNumeros(a, b));
+            } 
+            // Logique pour FP1, FP2, FP3
+            else if (["FP1", "FP2", "FP3"].includes(secteur)) {
+                filteredData = data.filter(item => {
+                    const numero = item.numero;
+                    return String(numero[0]) === secteur || String(numero[2]) === secteur;
+                }).sort((a, b) => {
+                    const aValue = String(a.numero[0]) === secteur ? Number(a.numero[1] ?? Infinity) : Number(a.numero[3] ?? Infinity);
+                    const bValue = String(b.numero[0]) === secteur ? Number(b.numero[1] ?? Infinity) : Number(b.numero[3] ?? Infinity);
+                    return aValue - bValue;
                 });
-            } else {
-                resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
             }
+            // Logique pour les autres secteurs
+            else {
+                filteredData = data.filter(item => item.secteur.includes(secteur));
+            }
+
+            // Affichage des résultats
+            renderResults(filteredData, secteur);
+        });
+    });
+
+    // Fonction pour trier les objets par numero
+    function sortNumeros(a, b) {
+        const aPrimary = Array.isArray(a.numero) ? Number(a.numero[0] ?? Infinity) : Number(a.numero ?? Infinity);
+        const bPrimary = Array.isArray(b.numero) ? Number(b.numero[0] ?? Infinity) : Number(b.numero ?? Infinity);
+
+        if (aPrimary !== bPrimary) return aPrimary - bPrimary;
+
+        const aSecondary = Array.isArray(a.numero) ? Number(a.numero[1] ?? Infinity) : Infinity;
+        const bSecondary = Array.isArray(b.numero) ? Number(b.numero[1] ?? Infinity) : Infinity;
+
+        return aSecondary - bSecondary;
+    }
+
+    // Fonction pour afficher les résultats
+    function renderResults(filteredData, secteur) {
+        if (filteredData.length > 0) {
+            resultsDiv.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Numero 1</th>
+                            <th>Numero 2</th>
+                            <th>Numero 3</th>
+                            <th>Numero 4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredData.map(item => `
+                            <tr>
+                                <td>${item.nom}</td>
+                                <td>${Array.isArray(item.numero) ? item.numero[0] ?? '' : item.numero}</td>
+                                <td>${Array.isArray(item.numero) ? item.numero[1] ?? '' : ''}</td>
+                                <td>${Array.isArray(item.numero) ? item.numero[2] ?? '' : ''}</td>
+                                <td>${Array.isArray(item.numero) ? item.numero[3] ?? '' : ''}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+        } else {
+            resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
         }
+    }
+
 
         // Fonction pour ouvrir la fenêtre modale
         function openModal(simulation) {
