@@ -261,7 +261,7 @@
          // Fonction pour ouvrir la fenêtre modale
         function openModal(simulation) {
             modalBody.innerHTML = 
-                <div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>
+                '<div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>
                 <div style="margin-top: 10px;">
                     <label><input type="checkbox" name="status" value="trop_faible"> Trop faible</label><br>
                     <label><input type="checkbox" name="status" value="simple"> Simple</label><br>
@@ -274,7 +274,7 @@
                 </div>
                 <div style="margin-top: 10px; text-align: right;">
                     <button id="send-comment">Envoyer commentaire</button>
-                </div>
+                </div>'
             ;
             modal.style.display = 'block';
             modalOverlay.style.display = 'block';
