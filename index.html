@@ -133,6 +133,10 @@
 </head>
 <body>
     <h1>Liste Simulations</h1>
+    <div>9.1 = Bloc 1(4N), 2(4E) et 3(KD2F)<br>
+    9.2 = Bloc 4(5R) et 5(4H)<br>
+    9.3 = Bloc 6(renforcement) et 7(mode dégradé)
+    </div>
     <div class="buttons-container">
         <button data-secteur="4N">4N</button>
         <button data-secteur="4E">4E</button>
@@ -254,12 +258,29 @@
             }
         }
 
+         // Fonction pour ouvrir la fenêtre modale
         function openModal(simulation) {
-            modalBody.innerHTML = `<div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>`;
+            modalBody.innerHTML = 
+                <div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>
+                <div style="margin-top: 10px;">
+                    <label><input type="checkbox" name="status" value="trop_faible"> Trop faible</label><br>
+                    <label><input type="checkbox" name="status" value="simple"> Simple</label><br>
+                    <label><input type="checkbox" name="status" value="ok"> OK</label><br>
+                    <label><input type="checkbox" name="status" value="charge"> Chargé</label><br>
+                    <label><input type="checkbox" name="status" value="trop_charge"> Trop chargé</label><br>
+                </div>
+                <div style="margin-top: 10px;">
+                    <textarea id="comment" rows="4" style="width: 100%;" placeholder="Ajoutez un commentaire..."></textarea>
+                </div>
+                <div style="margin-top: 10px; text-align: right;">
+                    <button id="send-comment">Envoyer commentaire</button>
+                </div>
+            ;
             modal.style.display = 'block';
             modalOverlay.style.display = 'block';
         }
 
+        // Fermer la fenêtre modale
         closeModal.addEventListener('click', () => {
             modal.style.display = 'none';
             modalOverlay.style.display = 'none';
