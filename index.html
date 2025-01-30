@@ -11,6 +11,12 @@
 <body>
     <h1>Liste Simulations</h1>
     <div class="buttons-container">
+        <button data-secteur="4N">4N</button>
+        <button data-secteur="4E">4E</button>
+        <button data-secteur="5R">5R</button>
+        <button data-secteur="4H">4H</button>
+        <button data-secteur="KD">KD</button>
+        <button data-secteur="2F">2F</button>
         <button data-secteur="9.1">9.1</button>
         <button data-secteur="9.2">9.2</button>
         <button data-secteur="9.3">9.3</button>
@@ -23,8 +29,21 @@
         Cliquez sur un bouton pour afficher les objets correspondants.
     </div>
 
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal" id="modal">
+        <div class="modal-header">Détails de la Simulation</div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer">
+            <button class="close-modal" id="close-modal">Fermer</button>
+        </div>
+    </div>
+
     <script>
         const resultsDiv = document.getElementById('results');
+        const modal = document.getElementById('modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalBody = document.getElementById('modal-body');
+        const closeModal = document.getElementById('close-modal');
         let data = [];
 
         fetch('simulations.json')
@@ -50,16 +69,16 @@
                 };
 
                 if (mapping[secteur]) {
-                    filteredData = data.filter(item => {
-                        return mapping[secteur].some(value => 
-                            (item.numero[0] === value || item.numero[2] === value)
-                        );
-                    });
+                    filteredData = data.filter(item => 
+                        mapping[secteur].some(value => (item.numero[0] === value || item.numero[2] === value))
+                    );
+                } else {
+                    filteredData = data.filter(item => item.secteur.includes(secteur));
                 }
                 
                 filteredData.sort((a, b) => {
-                    let valA = mapping[secteur].indexOf(a.numero[0]) !== -1 ? a.numero[0] : a.numero[2];
-                    let valB = mapping[secteur].indexOf(b.numero[0]) !== -1 ? b.numero[0] : b.numero[2];
+                    let valA = mapping[secteur]?.indexOf(a.numero[0]) !== -1 ? a.numero[0] : a.numero[2];
+                    let valB = mapping[secteur]?.indexOf(b.numero[0]) !== -1 ? b.numero[0] : b.numero[2];
                     
                     if (valA !== valB) return valA - valB;
                     
@@ -89,7 +108,7 @@
                         <tbody>
                             ${filteredData.map(item => `
                                 <tr>
-                                    <td>${item.nom}</td>
+                                    <td><a href="#" class="simulation-name" data-id="${item.id}">${item.nom}</a></td>
                                     <td>${item.numero[0]}</td>
                                     <td>${item.numero[1]}</td>
                                     <td>${item.numero[2]}</td>
@@ -98,10 +117,35 @@
                             `).join('')}
                         </tbody>
                     </table>`;
+
+                document.querySelectorAll('.simulation-name').forEach(link => {
+                    link.addEventListener('click', event => {
+                        event.preventDefault();
+                        const id = event.target.getAttribute('data-id');
+                        const simulation = data.find(item => item.id == id);
+                        openModal(simulation);
+                    });
+                });
             } else {
                 resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
             }
         }
+
+        function openModal(simulation) {
+            modalBody.innerHTML = `<div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>`;
+            modal.style.display = 'block';
+            modalOverlay.style.display = 'block';
+        }
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            modalOverlay.style.display = 'none';
+        });
+
+        modalOverlay.addEventListener('click', () => {
+            modal.style.display = 'none';
+            modalOverlay.style.display = 'none';
+        });
     </script>
 </body>
 </html>
