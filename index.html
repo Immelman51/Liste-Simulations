@@ -236,10 +236,10 @@
                             ${filteredData.map(item => `
                                 <tr>
                                     <td><a href="#" class="simulation-name" data-id="${item.id}">${item.nom}</a></td>
-                                    <td>${item.numero[0]}</td>
-                                    <td>${item.numero[1]}</td>
-                                    <td>${item.numero[2]}</td>
-                                    <td>${item.numero[3]}</td>
+                                    <td>${item.numero[0] ?? ''}</td>
+                                    <td>${item.numero[1] ?? ''}</td>
+                                    <td>${item.numero[2] ?? ''}</td>
+                                    <td>${item.numero[3] ?? ''}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
