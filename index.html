@@ -261,20 +261,20 @@
          // Fonction pour ouvrir la fenêtre modale
         function openModal(simulation) {
             modalBody.innerHTML = 
-                '<div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>
-                <div style="margin-top: 10px;">
-                    <label><input type="checkbox" name="status" value="trop_faible"> Trop faible</label><br>
-                    <label><input type="checkbox" name="status" value="simple"> Simple</label><br>
-                    <label><input type="checkbox" name="status" value="ok"> OK</label><br>
-                    <label><input type="checkbox" name="status" value="charge"> Chargé</label><br>
-                    <label><input type="checkbox" name="status" value="trop_charge"> Trop chargé</label><br>
+                "<div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>
+                <div style='margin-top: 10px;'>
+                    <label><input type='checkbox' name='status' value='trop_faible'> Trop faible</label><br>
+                    <label><input type='checkbox' name='status' value='simple'> Simple</label><br>
+                    <label><input type='checkbox' name='status' value='ok'> OK</label><br>
+                    <label><input type='checkbox' name='status' value='charge'> Chargé</label><br>
+                    <label><input type='checkbox' name='status' value='trop_charge'> Trop chargé</label><br>
                 </div>
-                <div style="margin-top: 10px;">
-                    <textarea id="comment" rows="4" style="width: 100%;" placeholder="Ajoutez un commentaire..."></textarea>
+                <div style='margin-top: 10px;'>
+                    <textarea id='comment' rows='4' style='width: 100%;' placeholder='Ajoutez un commentaire...'></textarea>
                 </div>
-                <div style="margin-top: 10px; text-align: right;">
-                    <button id="send-comment">Envoyer commentaire</button>
-                </div>'
+                <div style='margin-top: 10px; text-align: right;'>
+                    <button id='send-comment'>Envoyer commentaire</button>
+                </div>"
             ;
             modal.style.display = 'block';
             modalOverlay.style.display = 'block';
