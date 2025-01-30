@@ -6,146 +6,11 @@
     <title>Liste Simulations</title>
     <style>
         /* Styles inchangés */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f0f0;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 20px;
-        }
-
-        .buttons-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .results {
-            margin: 20px;
-            padding: 10px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            z-index: 1000;
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .modal-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-footer {
-            text-align: right;
-        }
-
-        .close-modal {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            background-color: #d32f2f;
-        }
     </style>
 </head>
 <body>
     <h1>Liste Simulations</h1>
-    <div>9.1 = Bloc 1(4N), 2(4E) et 3(KD2F)<br>
-    9.2 = Bloc 4(5R) et 5(4H)<br>
-    9.3 = Bloc 6(renforcement) et 7(mode dégradé)
-    </div>
-
     <div class="buttons-container">
-        <button data-secteur="4N">4N</button>
-        <button data-secteur="5R">5R</button>
-        <button data-secteur="KD">KD</button>
-        <button data-secteur="2F">2F</button>
-        <button data-secteur="4E">4E</button>
-        <button data-secteur="4H">4H</button>
         <button data-secteur="9.1">9.1</button>
         <button data-secteur="9.2">9.2</button>
         <button data-secteur="9.3">9.3</button>
@@ -158,27 +23,10 @@
         Cliquez sur un bouton pour afficher les objets correspondants.
     </div>
 
-    <div class="modal-overlay" id="modal-overlay"></div>
-
-    <div class="modal" id="modal">
-        <div class="modal-header">Détails de la Simulation</div>
-        <div class="modal-body" id="modal-body">
-            <!-- Contenu dynamique ici -->
-        </div>
-        <div class="modal-footer">
-            <button class="close-modal" id="close-modal">Fermer</button>
-        </div>
-    </div>
-
     <script>
         const resultsDiv = document.getElementById('results');
-        const modal = document.getElementById('modal');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalBody = document.getElementById('modal-body');
-        const closeModal = document.getElementById('close-modal');
         let data = [];
 
-        // Charger les données depuis un fichier JSON externe
         fetch('simulations.json')
             .then(response => response.json())
             .then(jsonData => {
@@ -188,36 +36,43 @@
                 resultsDiv.innerHTML = `Erreur lors du chargement des données : ${error.message}`;
             });
 
-        // Gérer les clics sur les boutons
         document.querySelectorAll('.buttons-container button').forEach(button => {
             button.addEventListener('click', () => {
                 const secteur = button.getAttribute('data-secteur');
                 let filteredData = [];
+                const mapping = {
+                    "9.1": [1, 2, 3],
+                    "9.2": [4, 5],
+                    "9.3": [6, 7],
+                    "FP1": ["FP1"],
+                    "FP2": ["FP2"],
+                    "FP3": ["FP3"]
+                };
 
-                if (["9.1", "9.2", "9.3"].includes(secteur)) {
-                    const mapping = {
-                        "9.1": [1, 2, 3],
-                        "9.2": [4, 5],
-                        "9.3": [6, 7]
-                    };
+                if (mapping[secteur]) {
                     filteredData = data.filter(item => {
-                        const numero = item.numero;
-                        return Array.isArray(numero) ? numero.some(n => mapping[secteur].includes(Number(n))) : mapping[secteur].includes(Number(numero));
+                        return mapping[secteur].some(value => 
+                            (item.numero[0] === value || item.numero[2] === value)
+                        );
                     });
-                } else if (["FP1", "FP2", "FP3"].includes(secteur)) {
-                    filteredData = data.filter(item => {
-                        const numero = item.numero;
-                        return String(numero[0]) === secteur || String(numero[2]) === secteur;
-                    });
-                } else {
-                    filteredData = data.filter(item => item.secteur.includes(secteur));
                 }
-
+                
+                filteredData.sort((a, b) => {
+                    let valA = mapping[secteur].indexOf(a.numero[0]) !== -1 ? a.numero[0] : a.numero[2];
+                    let valB = mapping[secteur].indexOf(b.numero[0]) !== -1 ? b.numero[0] : b.numero[2];
+                    
+                    if (valA !== valB) return valA - valB;
+                    
+                    let subA = a.numero[0] === valA ? a.numero[1] : a.numero[3];
+                    let subB = b.numero[0] === valB ? b.numero[1] : b.numero[3];
+                    
+                    return subA - subB;
+                });
+                
                 renderResults(filteredData, secteur);
             });
         });
 
-        // Fonction pour afficher les résultats
         function renderResults(filteredData, secteur) {
             if (filteredData.length > 0) {
                 resultsDiv.innerHTML = `
@@ -234,62 +89,19 @@
                         <tbody>
                             ${filteredData.map(item => `
                                 <tr>
-                                    <td><a href="#" class="simulation-name" data-id="${item.id}">${item.nom}</a></td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[0] ?? '' : item.numero}</td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[1] ?? '' : ''}</td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[2] ?? '' : ''}</td>
-                                    <td>${Array.isArray(item.numero) ? item.numero[3] ?? '' : ''}</td>
+                                    <td>${item.nom}</td>
+                                    <td>${item.numero[0]}</td>
+                                    <td>${item.numero[1]}</td>
+                                    <td>${item.numero[2]}</td>
+                                    <td>${item.numero[3]}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>`;
-
-                // Ajouter des gestionnaires d'événements pour les noms cliquables
-                document.querySelectorAll('.simulation-name').forEach(link => {
-                    link.addEventListener('click', event => {
-                        event.preventDefault();
-                        const id = event.target.getAttribute('data-id');
-                        const simulation = data.find(item => item.id == id);
-                        openModal(simulation);
-                    });
-                });
             } else {
                 resultsDiv.innerHTML = `Aucun objet trouvé pour le secteur "${secteur}".`;
             }
         }
-
-        // Fonction pour ouvrir la fenêtre modale
-        function openModal(simulation) {
-            modalBody.innerHTML = `
-                <div>Log : ${simulation.log ?? 'Aucun log disponible'}</div>
-                <div style="margin-top: 10px;">
-                    <label><input type="checkbox" name="status" value="trop_faible"> Trop faible</label><br>
-                    <label><input type="checkbox" name="status" value="simple"> Simple</label><br>
-                    <label><input type="checkbox" name="status" value="ok"> OK</label><br>
-                    <label><input type="checkbox" name="status" value="charge"> Chargé</label><br>
-                    <label><input type="checkbox" name="status" value="trop_charge"> Trop chargé</label><br>
-                </div>
-                <div style="margin-top: 10px;">
-                    <textarea id="comment" rows="4" style="width: 100%;" placeholder="Ajoutez un commentaire..."></textarea>
-                </div>
-                <div style="margin-top: 10px; text-align: right;">
-                    <button id="send-comment">Envoyer commentaire</button>
-                </div>
-            `;
-            modal.style.display = 'block';
-            modalOverlay.style.display = 'block';
-        }
-
-        // Fermer la fenêtre modale
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-            modalOverlay.style.display = 'none';
-        });
-
-        modalOverlay.addEventListener('click', () => {
-            modal.style.display = 'none';
-            modalOverlay.style.display = 'none';
-        });
     </script>
 </body>
 </html>
